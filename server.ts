@@ -1,4 +1,5 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
+import type { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -249,7 +250,7 @@ app.get(['/health', '/api/health'], (_req: Request, res: Response) => {
 });
 
 // Endpoint: Generate Story
-app.post('/api/story', rateLimiter, async (req: Request, res: Response) => {
+app.post(['/api/story', '/story'], rateLimiter, async (req: Request, res: Response) => {
   try {
     const {
       topic,
@@ -529,7 +530,7 @@ Return a valid JSON object matching this exact structure:
 });
 
 // Endpoint: Ask the Character Mentor (Spontaneous Voice/Text Q&A)
-app.post('/api/ask-character', rateLimiter, async (req: Request, res: Response) => {
+app.post(['/api/ask-character', '/ask-character'], rateLimiter, async (req: Request, res: Response) => {
   try {
     const {
       characterName = 'STEM Mentor',
@@ -604,7 +605,7 @@ Answer as ${characterName}:`;
 });
 
 // Endpoint: Generate Quiz based ONLY on the story
-app.post('/api/quiz', rateLimiter, async (req: Request, res: Response) => {
+app.post(['/api/quiz', '/quiz'], rateLimiter, async (req: Request, res: Response) => {
   try {
     const { story, age_group = '8-10', language = 'English', title = '' } = req.body;
 
@@ -737,7 +738,7 @@ Return JSON in this format:
 });
 
 // Endpoint: Evaluate Quiz Answers
-app.post('/api/evaluate', rateLimiter, async (req: Request, res: Response) => {
+app.post(['/api/evaluate', '/evaluate'], rateLimiter, async (req: Request, res: Response) => {
   try {
     const { story, questions, user_answers, age_group = '8-10', language = 'English' } = req.body;
 
@@ -834,7 +835,7 @@ Return JSON in this format:
 });
 
 // Endpoint: Compare Storytelling by Age (Pedagogical Matrix)
-app.post('/api/compare-ages', rateLimiter, async (req: Request, res: Response) => {
+app.post(['/api/compare-ages', '/compare-ages'], rateLimiter, async (req: Request, res: Response) => {
   try {
     const { topic, language = 'English' } = req.body;
 
@@ -962,7 +963,7 @@ Return JSON in this format:
 });
 
 // Endpoint: Generate Teacher Classroom Worksheet & Activity
-app.post('/api/worksheet', rateLimiter, async (req: Request, res: Response) => {
+app.post(['/api/worksheet', '/worksheet'], rateLimiter, async (req: Request, res: Response) => {
   try {
     const { story, title, topic, age_group, language = 'English' } = req.body;
 
@@ -1041,4 +1042,10 @@ async function startServer() {
   });
 }
 
-startServer();
+// Only start standalone server when run directly (not when running inside Vercel serverless function)
+if (!process.env.VERCEL) {
+  startServer();
+}
+
+export default app;
+export { app };
