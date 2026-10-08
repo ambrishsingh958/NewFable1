@@ -201,6 +201,9 @@ export function playWebAudioChime(type: 'welcome' | 'success' | 'click' | 'star'
   }
 }
 
+// Strong reference holder to prevent V8 garbage-collecting active utterances mid-speech
+const activeUtterances = new Set<SpeechSynthesisUtterance>();
+
 /**
  * Robust Story Speech Player
  * Manages chunking, watchdog pinging, pause/resume, and boundary events
@@ -211,6 +214,7 @@ export class RobustVoiceEngine {
   private isSpeakingActive: boolean = false;
   private isPausedState: boolean = false;
   private watchdogTimer: any = null;
+  private chunkTimeoutTimer: any = null;
   private currentUtterance: SpeechSynthesisUtterance | null = null;
   private options: VoicePlaybackOptions = {};
 
@@ -233,6 +237,14 @@ export class RobustVoiceEngine {
     // Stop any existing playback
     this.stop();
 
+    // Cancel hung states and allow Chromium event loop tick to finish cancellation
+    try {
+      if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
+        window.speechSynthesis.cancel();
+        await new Promise((r) => setTimeout(r, 70));
+      }
+    } catch {}
+
     await loadVoices();
 
     this.options = options;
@@ -247,11 +259,6 @@ export class RobustVoiceEngine {
       return;
     }
 
-    // Cancel any hung synthesis states and start watchdog
-    try {
-      window.speechSynthesis.cancel();
-    } catch {}
-
     this.startWatchdog();
     options.onStart?.();
 
@@ -259,7 +266,16 @@ export class RobustVoiceEngine {
     this.speakNextChunk();
   }
 
+  private clearChunkTimeout(): void {
+    if (this.chunkTimeoutTimer) {
+      clearTimeout(this.chunkTimeoutTimer);
+      this.chunkTimeoutTimer = null;
+    }
+  }
+
   private speakNextChunk(): void {
+    this.clearChunkTimeout();
+
     if (!this.isSpeakingActive || this.currentChunkIndex >= this.chunks.length) {
       this.cleanup();
       this.options.onEnd?.();
@@ -277,6 +293,8 @@ export class RobustVoiceEngine {
 
       const utterance = new SpeechSynthesisUtterance(chunkText);
       this.currentUtterance = utterance;
+      // CRITICAL FIX: Keep reference in Set to prevent V8 garbage collection
+      activeUtterances.add(utterance);
 
       utterance.lang = langCode;
       utterance.rate = this.options.rate ?? 0.95;
@@ -297,22 +315,24 @@ export class RobustVoiceEngine {
       };
 
       utterance.onend = () => {
+        activeUtterances.delete(utterance);
+        this.clearChunkTimeout();
         if (!this.isSpeakingActive) return;
         this.currentChunkIndex++;
         this.speakNextChunk();
       };
 
       utterance.onerror = (event: any) => {
-        // If interrupted due to explicit stop/cancel, do not treat as fatal error
-        if (event.error === 'interrupted' || event.error === 'canceled') {
+        activeUtterances.delete(utterance);
+        this.clearChunkTimeout();
+        // If explicitly stopped, return
+        if (!this.isSpeakingActive) {
           return;
         }
-        console.warn('Speech chunk error:', event.error, chunkText);
+        console.warn('Speech chunk notification:', event?.error, chunkText);
         // Advance to next chunk instead of dying completely
-        if (this.isSpeakingActive) {
-          this.currentChunkIndex++;
-          this.speakNextChunk();
-        }
+        this.currentChunkIndex++;
+        this.speakNextChunk();
       };
 
       window.speechSynthesis.speak(utterance);
@@ -321,6 +341,22 @@ export class RobustVoiceEngine {
       if (window.speechSynthesis.paused) {
         window.speechSynthesis.resume();
       }
+
+      // Safeguard chunk watchdog in case browser never fires onend
+      const maxExpectedDurationMs = Math.max(chunkText.length * 200, 6000);
+      this.chunkTimeoutTimer = setTimeout(() => {
+        if (this.isSpeakingActive && !this.isPausedState) {
+          if (window.speechSynthesis.paused) {
+            window.speechSynthesis.resume();
+          } else {
+            console.warn('Chunk timed out, advancing cleanly to next sentence.');
+            activeUtterances.delete(utterance);
+            this.currentChunkIndex++;
+            this.speakNextChunk();
+          }
+        }
+      }, maxExpectedDurationMs);
+
     } catch (err) {
       console.warn('SpeechSynthesis speak error:', err);
       this.currentChunkIndex++;
@@ -386,6 +422,8 @@ export class RobustVoiceEngine {
     this.isSpeakingActive = false;
     this.isPausedState = false;
     this.currentUtterance = null;
+    this.clearChunkTimeout();
+    activeUtterances.clear();
     this.stopWatchdog();
   }
 
