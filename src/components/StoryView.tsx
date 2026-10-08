@@ -36,8 +36,14 @@ import {
 import confetti from 'canvas-confetti';
 import { StoryData, CharacterMentor } from '../types';
 import { SuggestedResources } from './SuggestedResources';
+import { DrawAndColorStudio } from './DrawAndColorStudio';
+import { StemExperimentSimulator } from './StemExperimentSimulator';
+import { AmbientSoundscapesBar } from './AmbientSoundscapesBar';
+import { ComicStripModal } from './ComicStripModal';
+import { WordLabModal } from './WordLabModal';
 import { askCharacter } from '../services/api';
 import { globalVoiceEngine, playWebAudioChime, getVoiceLanguageCode } from '../services/voiceEngine';
+import { soundscapeEngine } from '../services/soundscapes';
 
 interface StoryViewProps {
   storyData: StoryData;
@@ -116,6 +122,13 @@ export const StoryView: React.FC<StoryViewProps> = ({
 
   // Printable Coloring Book Modal State
   const [isColoringBookModalOpen, setIsColoringBookModalOpen] = useState(false);
+
+  // New Interactive STEM Learning Studios
+  const [isDrawStudioOpen, setIsDrawStudioOpen] = useState(false);
+  const [isExperimentLabOpen, setIsExperimentLabOpen] = useState(false);
+  const [isComicStripOpen, setIsComicStripOpen] = useState(false);
+  const [isWordLabOpen, setIsWordLabOpen] = useState(false);
+  const [studioXpReward, setStudioXpReward] = useState<{ amount: number; reason: string } | null>(null);
 
   const storyArticleRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<any>(null);
@@ -533,14 +546,76 @@ export const StoryView: React.FC<StoryViewProps> = ({
             <span className="hidden sm:inline">Books & Links</span>
           </a>
 
+          {/* Draw & Color Studio Button */}
+          <button
+            onClick={() => {
+              soundscapeEngine.playSoundEffect('pop');
+              setIsDrawStudioOpen(!isDrawStudioOpen);
+            }}
+            className={`text-xs sm:text-sm font-bold px-3 py-1.5 rounded-xl border transition-all flex items-center gap-1.5 shadow-2xs cursor-pointer ${
+              isDrawStudioOpen
+                ? 'bg-gradient-to-r from-pink-500 to-rose-600 text-white border-pink-600 ring-2 ring-pink-300'
+                : 'bg-pink-50 hover:bg-pink-100 text-pink-800 border-pink-200'
+            }`}
+            title="Open Draw & Color Studio: Illustrate concepts and color what you learned"
+          >
+            <Paintbrush className="w-4 h-4 text-pink-600" />
+            <span>Draw & Color Studio</span>
+          </button>
+
+          {/* Virtual Experiment Simulator Lab */}
+          <button
+            onClick={() => {
+              soundscapeEngine.playSoundEffect('pop');
+              setIsExperimentLabOpen(!isExperimentLabOpen);
+            }}
+            className={`text-xs sm:text-sm font-bold px-3 py-1.5 rounded-xl border transition-all flex items-center gap-1.5 shadow-2xs cursor-pointer ${
+              isExperimentLabOpen
+                ? 'bg-gradient-to-r from-cyan-600 to-indigo-600 text-white border-cyan-600 ring-2 ring-cyan-300'
+                : 'bg-cyan-50 hover:bg-cyan-100 text-cyan-800 border-cyan-200'
+            }`}
+            title="Interactive STEM Virtual Experiment Lab"
+          >
+            <Sparkles className="w-4 h-4 text-cyan-600" />
+            <span className="hidden sm:inline">Experiment Lab</span>
+          </button>
+
+          {/* Illustrated Comic Strip */}
+          <button
+            onClick={() => {
+              soundscapeEngine.playSoundEffect('pop');
+              setIsComicStripOpen(true);
+            }}
+            className="text-xs sm:text-sm font-bold px-3 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 transition-colors flex items-center gap-1.5 shadow-2xs cursor-pointer"
+            title="Read 4-panel illustrated comic strip version"
+          >
+            <span>🎨</span>
+            <span className="hidden sm:inline">Comic Strip</span>
+          </button>
+
+          {/* Phonics & Word Lab */}
+          {storyData.vocabulary && storyData.vocabulary.length > 0 && (
+            <button
+              onClick={() => {
+                soundscapeEngine.playSoundEffect('pop');
+                setIsWordLabOpen(true);
+              }}
+              className="text-xs sm:text-sm font-bold px-3 py-1.5 rounded-xl bg-violet-50 hover:bg-violet-100 text-violet-800 border border-violet-200 transition-colors flex items-center gap-1.5 shadow-2xs cursor-pointer"
+              title="Interactive Syllable Breakdown and Speech Phonics Lab"
+            >
+              <span>🔤</span>
+              <span className="hidden sm:inline">Word Lab</span>
+            </button>
+          )}
+
           {/* Printable Coloring Book & Worksheet Button */}
           <button
             onClick={() => setIsColoringBookModalOpen(true)}
             className="text-xs sm:text-sm font-semibold text-emerald-800 hover:text-emerald-900 px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition-colors flex items-center gap-1.5 shadow-2xs cursor-pointer"
             title="One-click printable coloring sheets and worksheets"
           >
-            <Paintbrush className="w-4 h-4 text-emerald-600" />
-            <span className="hidden sm:inline">Coloring Sheet</span>
+            <Printer className="w-4 h-4 text-emerald-600" />
+            <span className="hidden sm:inline">Printable Sheet</span>
           </button>
 
           {/* Bookmark / Save */}
@@ -699,6 +774,54 @@ export const StoryView: React.FC<StoryViewProps> = ({
               </div>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Focus Sound & Ambient Audio Bar */}
+      <div className="mb-4">
+        <AmbientSoundscapesBar topic={storyData.topic} />
+      </div>
+
+      {/* Interactive Draw & Color Studio Section (if toggled open) */}
+      {isDrawStudioOpen && (
+        <DrawAndColorStudio
+          topic={storyData.topic}
+          storyTitle={storyData.title}
+          ageGroup={storyData.age_group}
+          onClose={() => setIsDrawStudioOpen(false)}
+          onAwardXp={(amount, reason) => {
+            setStudioXpReward({ amount, reason });
+            setTimeout(() => setStudioXpReward(null), 4500);
+          }}
+        />
+      )}
+
+      {/* Virtual STEM Experiment Simulator (if toggled open) */}
+      {isExperimentLabOpen && (
+        <StemExperimentSimulator
+          topic={storyData.topic}
+          ageGroup={storyData.age_group}
+          onClose={() => setIsExperimentLabOpen(false)}
+          onAwardXp={(amount, reason) => {
+            setStudioXpReward({ amount, reason });
+            setTimeout(() => setStudioXpReward(null), 4500);
+          }}
+        />
+      )}
+
+      {/* XP Reward Toast Banner */}
+      {studioXpReward && (
+        <div className="mb-4 p-3.5 rounded-2xl bg-gradient-to-r from-amber-400 to-orange-500 text-amber-950 font-black text-xs flex items-center justify-between shadow-lg animate-scale-up no-print">
+          <div className="flex items-center gap-2">
+            <span className="text-xl">🌟</span>
+            <span>+{studioXpReward.amount} STEM Explorer XP! {studioXpReward.reason}</span>
+          </div>
+          <button
+            onClick={() => setStudioXpReward(null)}
+            className="text-amber-950/80 hover:text-amber-950 font-bold px-2 py-0.5"
+          >
+            ✕
+          </button>
         </div>
       )}
 
@@ -1426,6 +1549,29 @@ export const StoryView: React.FC<StoryViewProps> = ({
             </div>
           </div>
         </div>
+      )}
+
+      {/* 4-Panel Illustrated Comic Strip Modal */}
+      {isComicStripOpen && (
+        <ComicStripModal
+          storyData={storyData}
+          isOpen={isComicStripOpen}
+          onClose={() => setIsComicStripOpen(false)}
+        />
+      )}
+
+      {/* Phonics & Syllable Word Lab Modal */}
+      {isWordLabOpen && storyData.vocabulary && (
+        <WordLabModal
+          vocabulary={storyData.vocabulary}
+          isOpen={isWordLabOpen}
+          onClose={() => setIsWordLabOpen(false)}
+          language={storyData.language}
+          onAwardXp={(amount, reason) => {
+            setStudioXpReward({ amount, reason });
+            setTimeout(() => setStudioXpReward(null), 4500);
+          }}
+        />
       )}
     </div>
   );

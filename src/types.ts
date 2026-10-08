@@ -119,7 +119,7 @@ export interface SavedStoryItem {
   };
 }
 
-export type ActiveNavTab = 'studio' | 'explore' | 'agelab' | 'flashcards' | 'badges' | 'teacher' | 'login' | 'profile';
+export type ActiveNavTab = 'studio' | 'maker' | 'explore' | 'agelab' | 'flashcards' | 'badges' | 'teacher' | 'login' | 'profile';
 
 export interface UserProfile {
   id: string;

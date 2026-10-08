@@ -12,6 +12,7 @@ import {
   Flame,
   User,
   LogOut,
+  Palette,
 } from 'lucide-react';
 import { ActiveNavTab, UserProfile } from '../types';
 import { FableSteamLogo } from './FableSteamLogo';
@@ -43,6 +44,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const NAV_ITEMS: { id: ActiveNavTab; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
     { id: 'studio', label: 'Story Studio', icon: BookOpen },
+    { id: 'maker', label: 'Maker & Art Lab', icon: Palette },
     { id: 'explore', label: 'Explore', icon: Compass },
     { id: 'agelab', label: 'Age Lab', icon: Layers },
     { id: 'flashcards', label: 'Flashcards', icon: Brain },

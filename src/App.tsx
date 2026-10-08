@@ -18,6 +18,7 @@ import { AgeLabPage } from './components/AgeLabPage';
 import { FlashcardsPage } from './components/FlashcardsPage';
 import { BadgesPage } from './components/BadgesPage';
 import { TeacherPage } from './components/TeacherPage';
+import { MakerPage } from './components/MakerPage';
 import { LoginPage } from './components/LoginPage';
 import { ProfileModal } from './components/ProfileModal';
 import { StreakModal } from './components/StreakModal';
@@ -480,7 +481,22 @@ export default function App() {
           </div>
         )}
 
-        {/* Tab 2: Explore Library */}
+        {/* Tab 2: Maker & Art Lab (Draw & Color What You Learned + Virtual Experiments) */}
+        {currentTab === 'maker' && (
+          <MakerPage
+            onLaunchTopicStory={(topic) => {
+              handleGenerateStory({
+                topic,
+                age_group: currentUser?.ageGroup || '8-10',
+                language: 'English',
+                length: 'medium',
+              });
+              setCurrentTab('studio');
+            }}
+          />
+        )}
+
+        {/* Tab 3: Explore Library */}
         {currentTab === 'explore' && (
           <ExplorePage
             onSelectTopic={(params) => {
