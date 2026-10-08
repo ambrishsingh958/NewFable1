@@ -249,8 +249,9 @@ export const TeacherPage: React.FC<TeacherPageProps> = ({ savedStories, onOpenSt
                 <span>Date Awarded</span>
               </div>
 
-              <div className="w-16 h-16 rounded-full bg-amber-400 text-amber-950 flex items-center justify-center font-black text-[10px] text-center shadow-md">
-                SEAL OF MASTERY
+              <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-amber-400 to-yellow-300 text-amber-950 flex flex-col items-center justify-center font-black text-[9px] text-center shadow-lg border-2 border-amber-500">
+                <span className="text-base leading-none">★ 100% ★</span>
+                <span className="leading-tight uppercase mt-0.5">MASTERY SEAL</span>
               </div>
 
               <div className="text-right">

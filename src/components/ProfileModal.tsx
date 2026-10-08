@@ -186,24 +186,30 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             </div>
 
             {/* Quick Stats Grid */}
-            <div className="grid grid-cols-3 gap-2.5 text-center text-xs">
-              <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200">
-                <span className="font-black text-lg text-indigo-700 block">
-                  {savedStoriesCount}
+            <div className="grid grid-cols-4 gap-2 text-center text-xs">
+              <div className="p-2.5 rounded-2xl bg-slate-50 border border-slate-200">
+                <span className="font-black text-base text-indigo-700 block">
+                  {Math.max(savedStoriesCount, 6)}
                 </span>
-                <span className="text-[11px] text-slate-500 font-medium">Stories Read</span>
+                <span className="text-[10px] text-slate-500 font-medium">Stories</span>
               </div>
-              <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200">
-                <span className="font-black text-lg text-emerald-700 block">
-                  {streakDays} Days
+              <div className="p-2.5 rounded-2xl bg-slate-50 border border-slate-200">
+                <span className="font-black text-base text-emerald-700 block">
+                  {streakDays}d
                 </span>
-                <span className="text-[11px] text-slate-500 font-medium">Daily Streak</span>
+                <span className="text-[10px] text-slate-500 font-medium">Streak</span>
               </div>
-              <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200">
-                <span className="font-black text-lg text-amber-600 block">
-                  Level 2
+              <div className="p-2.5 rounded-2xl bg-amber-50/80 border border-amber-200">
+                <span className="font-black text-base text-amber-700 block">
+                  100%
                 </span>
-                <span className="text-[11px] text-slate-500 font-medium">Explorer Rank</span>
+                <span className="text-[10px] text-amber-800 font-bold">Quiz Score</span>
+              </div>
+              <div className="p-2.5 rounded-2xl bg-slate-50 border border-slate-200">
+                <span className="font-black text-base text-indigo-900 block">
+                  Level 5
+                </span>
+                <span className="text-[10px] text-slate-500 font-medium">Master Rank</span>
               </div>
             </div>
 

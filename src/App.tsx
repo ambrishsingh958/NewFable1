@@ -23,6 +23,7 @@ import { LoginPage } from './components/LoginPage';
 import { ProfileModal } from './components/ProfileModal';
 import { StreakModal } from './components/StreakModal';
 import { Footer } from './components/Footer';
+import { INITIAL_MASTER_STORIES } from './services/seedStories';
 import {
   StoryData,
   QuizData,
@@ -128,15 +129,37 @@ export default function App() {
     }
   };
 
-  // Saved Stories in Browser Storage
+  // Saved Stories in Browser Storage (initialized with master 100% score stories)
   const [savedStories, setSavedStories] = useState<SavedStoryItem[]>(() => {
     try {
       const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
-      return saved ? JSON.parse(saved) : [];
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      }
+      return INITIAL_MASTER_STORIES;
     } catch {
-      return [];
+      return INITIAL_MASTER_STORIES;
     }
   });
+
+  // Handler to set 100% score for all STEM stories and badges
+  const handleSet100ScoreForAll = () => {
+    const list = savedStories.length > 0 ? savedStories : INITIAL_MASTER_STORIES;
+    const all100 = list.map((item) => ({
+      ...item,
+      quizScore: { score: 5, total: 5 },
+    }));
+    setSavedStories(all100);
+    try {
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(all100));
+      localStorage.setItem('fablestem_passport_data_v1', JSON.stringify({ missionsCompleted: 10, perfectScores: 10 }));
+    } catch (e) {
+      console.warn('Could not save 100 score state', e);
+    }
+  };
 
   // Sync saved stories with localStorage
   useEffect(() => {
@@ -537,6 +560,7 @@ export default function App() {
           <BadgesPage
             savedStories={savedStories}
             userName={currentUser?.displayName}
+            onSet100ScoreForAll={handleSet100ScoreForAll}
             onStartReading={() => {
               setCurrentTab('studio');
               setView('landing');

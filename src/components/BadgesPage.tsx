@@ -23,30 +23,34 @@ interface BadgesPageProps {
   savedStories: SavedStoryItem[];
   onStartReading: () => void;
   userName?: string;
+  onSet100ScoreForAll?: () => void;
 }
 
-export const BadgesPage: React.FC<BadgesPageProps> = ({ savedStories, onStartReading, userName }) => {
+export const BadgesPage: React.FC<BadgesPageProps> = ({ savedStories, onStartReading, userName, onSet100ScoreForAll }) => {
   const [activeTab, setActiveTab] = useState<'passport' | 'badges' | 'stickers'>('passport');
+  const [force100Mastery, setForce100Mastery] = useState(true);
 
-  const totalStories = savedStories.length;
-  const quizzesTaken = savedStories.filter((s) => s.quizScore !== undefined).length;
-  const perfectQuizzes = savedStories.filter(
+  const totalStories = force100Mastery ? Math.max(savedStories.length, 6) : savedStories.length;
+  const quizzesTaken = force100Mastery ? Math.max(savedStories.filter((s) => s.quizScore !== undefined).length, 6) : savedStories.filter((s) => s.quizScore !== undefined).length;
+  const perfectQuizzes = force100Mastery ? Math.max(savedStories.filter(
+    (s) => s.quizScore && s.quizScore.score === s.quizScore.total
+  ).length, 6) : savedStories.filter(
     (s) => s.quizScore && s.quizScore.score === s.quizScore.total
   ).length;
-  const multilingualStories = savedStories.filter((s) => s.language !== 'English').length;
-  const olderStories = savedStories.filter((s) => s.age_group === '11-14' || s.age_group === '15+').length;
+  const multilingualStories = force100Mastery ? Math.max(savedStories.filter((s) => s.language !== 'English').length, 1) : savedStories.filter((s) => s.language !== 'English').length;
+  const olderStories = force100Mastery ? Math.max(savedStories.filter((s) => s.age_group === '11-14' || s.age_group === '15+').length, 1) : savedStories.filter((s) => s.age_group === '11-14' || s.age_group === '15+').length;
 
   // Retrieve passport data from localStorage if available
   const passportStorageKey = 'fablestem_passport_data_v1';
-  let storedPassportData = { missionsCompleted: 0 };
+  let storedPassportData = { missionsCompleted: 6 };
   try {
     const raw = localStorage.getItem(passportStorageKey);
     if (raw) storedPassportData = JSON.parse(raw);
   } catch {}
 
-  const missionsCompleted = storedPassportData.missionsCompleted || 0;
+  const missionsCompleted = force100Mastery ? Math.max(storedPassportData.missionsCompleted || 0, 6) : (storedPassportData.missionsCompleted || 0);
 
-  // Themed STEM Passport Stamps
+  // Themed STEM Passport Stamps - All 100% Perfect Scores
   const PASSPORT_STAMPS: PassportStamp[] = [
     {
       id: 'stamp-gravity',
@@ -54,7 +58,7 @@ export const BadgesPage: React.FC<BadgesPageProps> = ({ savedStories, onStartRea
       topic: 'Gravity & Forces',
       date: 'Field Certified',
       icon: '🌌',
-      score: '5/5 Stars',
+      score: '100% Score (5/5 Stars)',
     },
     {
       id: 'stamp-fraction',
@@ -62,7 +66,7 @@ export const BadgesPage: React.FC<BadgesPageProps> = ({ savedStories, onStartRea
       topic: 'Fractions & Math',
       date: 'Field Certified',
       icon: '🍕',
-      score: 'Mastered',
+      score: '100% Score (5/5 Stars)',
     },
     {
       id: 'stamp-dino',
@@ -70,7 +74,7 @@ export const BadgesPage: React.FC<BadgesPageProps> = ({ savedStories, onStartRea
       topic: 'Fossils & Prehistory',
       date: 'Field Certified',
       icon: '🦕',
-      score: 'Field Cleared',
+      score: '100% Score (5/5 Stars)',
     },
     {
       id: 'stamp-photo',
@@ -78,7 +82,7 @@ export const BadgesPage: React.FC<BadgesPageProps> = ({ savedStories, onStartRea
       topic: 'Plant Food & Light',
       date: 'Field Certified',
       icon: '🌱',
-      score: 'Solar Balanced',
+      score: '100% Score (5/5 Stars)',
     },
     {
       id: 'stamp-water',
@@ -86,7 +90,7 @@ export const BadgesPage: React.FC<BadgesPageProps> = ({ savedStories, onStartRea
       topic: 'Evaporation & Rain',
       date: 'Field Certified',
       icon: '💧',
-      score: 'Cycle Completed',
+      score: '100% Score (5/5 Stars)',
     },
     {
       id: 'stamp-circuit',
@@ -94,7 +98,7 @@ export const BadgesPage: React.FC<BadgesPageProps> = ({ savedStories, onStartRea
       topic: 'Electricity & Power',
       date: 'Field Certified',
       icon: '⚡',
-      score: 'Energized',
+      score: '100% Score (5/5 Stars)',
     },
   ];
 
@@ -254,6 +258,28 @@ export const BadgesPage: React.FC<BadgesPageProps> = ({ savedStories, onStartRea
         <p className="text-sm text-slate-600 mt-2">
           Track your developmental STEM milestones, collecting official passport stamps, badges, and shiny digital stickers!
         </p>
+
+        {/* 100% Score For All Banner & Mastery Mode */}
+        <div className="mt-5 inline-flex flex-wrap items-center justify-center gap-2.5 p-2 px-4 rounded-2xl bg-gradient-to-r from-amber-500/10 via-emerald-500/10 to-indigo-500/10 border border-amber-300 shadow-2xs">
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
+            <span className="text-xs font-black text-slate-800">
+              STEM Mastery Score: <span className="text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-md font-extrabold">100% (All 6 Domains)</span>
+            </span>
+          </div>
+
+          <button
+            onClick={() => {
+              setForce100Mastery(true);
+              if (onSet100ScoreForAll) onSet100ScoreForAll();
+            }}
+            className="text-[11px] font-extrabold text-amber-900 bg-amber-400 hover:bg-amber-300 px-3 py-1 rounded-xl shadow-xs transition-all cursor-pointer flex items-center gap-1 active:scale-95"
+            title="Set 100% score for all STEM categories, quizzes, and badges"
+          >
+            <Sparkles className="w-3 h-3 text-amber-950" />
+            <span>Apply 100% Score For All</span>
+          </button>
+        </div>
       </div>
 
       {/* Navigation Sub-Tabs */}

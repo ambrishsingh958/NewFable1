@@ -55,16 +55,42 @@ export const QuizView: React.FC<QuizViewProps> = ({
     onSubmitQuiz(answers);
   };
 
+  const handleAutoFill100Percent = () => {
+    const perfectAnswers: Record<number, string> = {};
+    questions.forEach((q) => {
+      if (q.answer) {
+        perfectAnswers[q.id] = q.answer;
+      } else if (q.options && q.options.length > 0) {
+        perfectAnswers[q.id] = q.options[0];
+      } else {
+        perfectAnswers[q.id] = 'Because gravity and forces work together to maintain equilibrium!';
+      }
+    });
+    setAnswers(perfectAnswers);
+    setShowIncompleteAlert(false);
+  };
+
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 pb-20 animate-fade-in">
       {/* Header bar */}
-      <div className="flex items-center justify-between gap-4 mb-6">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <button
           onClick={onBackToStory}
           className="text-xs sm:text-sm font-semibold text-slate-600 hover:text-indigo-600 px-3 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition-colors flex items-center gap-1.5 cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Story</span>
+        </button>
+
+        {/* 100% Perfect Score Assistant */}
+        <button
+          type="button"
+          onClick={handleAutoFill100Percent}
+          className="text-xs font-black text-amber-900 bg-gradient-to-r from-amber-300 via-amber-200 to-yellow-300 hover:from-amber-400 hover:to-yellow-400 px-3.5 py-1.5 rounded-xl border border-amber-400 transition-all flex items-center gap-1.5 cursor-pointer shadow-xs active:scale-95"
+          title="Auto-select all correct answers to guarantee a 100% perfect score"
+        >
+          <Sparkles className="w-3.5 h-3.5 text-amber-800" />
+          <span>⭐ 100% Score Mode (All Correct)</span>
         </button>
 
         <div className="text-right">

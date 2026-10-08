@@ -3,18 +3,79 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FableSTEM</title>
-    <meta name="description" content="An interactive platform blending storytelling with hands-on STEM learning for curious young minds." />
-    <meta property="og:title" content="FableSTEM" />
-    <meta property="og:description" content="An interactive platform blending storytelling with hands-on STEM learning for curious young minds." />
+    <title>FableSTEM – Interactive STEM Storytelling & Learning Lab</title>
+    <meta
+      name="description"
+      content="Explore interactive STEM stories, hands-on science labs, creative coloring canvases, and quizzes designed to inspire young curious minds aged 4 to 15+."
+    />
+    <meta name="keywords" content="STEM education, science stories, kids learning, interactive quizzes, science experiments, educational lab, STEM stories for kids" />
+    <meta name="author" content="FableSTEM Team" />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#4f46e5" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="FableSTEM" />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://fablestem.vercel.app/" />
+
+    <!-- OpenGraph Social Metadata -->
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="FableSTEM" />
+    <meta property="og:title" content="FableSTEM – Interactive STEM Storytelling & Learning Lab" />
+    <meta
+      property="og:description"
+      content="Explore interactive STEM stories, hands-on science labs, creative coloring canvases, and quizzes designed to inspire young curious minds aged 4 to 15+."
+    />
+    <meta property="og:url" content="https://fablestem.vercel.app/" />
+    <meta property="og:image" content="/favicon.svg" />
+
+    <!-- Twitter Card Metadata -->
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="FableSTEM – Interactive STEM Storytelling & Learning Lab" />
+    <meta
+      name="twitter:description"
+      content="Explore interactive STEM stories, hands-on science labs, creative coloring canvases, and quizzes designed to inspire young curious minds aged 4 to 15+."
+    />
+    <meta name="twitter:image" content="/favicon.svg" />
+
+    <!-- Favicon & Manifest -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- Google Fonts Preconnect & Optimized Loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Schema.org EducationalApplication JSON-LD Structured Data for 100 SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "FableSTEM",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "All",
+      "description": "Interactive platform blending storytelling with hands-on STEM experiments, coloring canvases, and quizzes for young learners.",
+      "url": "https://fablestem.vercel.app/",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "audience": {
+        "@type": "EducationalAudience",
+        "educationalRole": "student",
+        "suggestedMinAge": 4,
+        "suggestedMaxAge": 16
+      }
+    }
+    </script>
   </head>
-  <body class="bg-slate-50 text-slate-800 antialiased selection:bg-indigo-100 selection:text-indigo-900">
+  <body class="bg-slate-50 text-slate-800 antialiased selection:bg-indigo-100 selection:text-indigo-900 min-h-screen">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

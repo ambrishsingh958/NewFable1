@@ -113,6 +113,14 @@ export interface SavedStoryItem {
   suggested_books?: SuggestedBook[];
   suggested_websites?: SuggestedWebsite[];
   takeaway?: string;
+  fun_facts?: string[];
+  hands_on_activity?: {
+    title: string;
+    materials: string[];
+    instructions: string[];
+  };
+  discussion_questions?: string[];
+  audioScript?: string;
   quizScore?: {
     score: number;
     total: number;
