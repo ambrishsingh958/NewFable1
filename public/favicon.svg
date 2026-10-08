@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <rect width="512" height="512" fill="#000000" rx="128" />
+
+  <defs>
+    <linearGradient id="favSteamGrad" x1="0%" y1="100%" x2="50%" y2="0%">
+      <stop offset="0%" stop-color="#38BDF8" />
+      <stop offset="60%" stop-color="#60A5FA" />
+      <stop offset="100%" stop-color="#93C5FD" />
+    </linearGradient>
+
+    <linearGradient id="favBookBaseGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0284C7" />
+      <stop offset="50%" stop-color="#38BDF8" />
+      <stop offset="100%" stop-color="#0284C7" />
+    </linearGradient>
+  </defs>
+
+  <g transform="translate(6, 60) scale(1.0)">
+    <!-- 1. Three Sinuous Steam / Vapor Trails -->
+    <!-- Trail 1 -->
+    <path
+      d="M 275 210 C 270 185 295 160 310 145 C 322 133 325 118 318 105 C 310 90 320 75 328 65 C 332 60 338 52 342 45 C 342 55 338 70 330 82 C 322 96 325 110 335 122 C 348 138 335 165 315 182 C 298 197 285 205 275 210 Z"
+      fill="url(#favSteamGrad)"
+    />
+
+    <!-- Trail 2 -->
+    <path
+      d="M 292 195 C 310 170 345 145 365 125 C 380 110 382 92 375 75 C 368 58 375 42 388 28 C 392 23 398 15 402 10 C 400 22 392 40 382 55 C 375 68 376 82 388 95 C 404 112 398 135 372 155 C 345 175 315 188 292 195 Z"
+      fill="url(#favSteamGrad)"
+    />
+
+    <!-- Trail 3 -->
+    <path
+      d="M 335 160 C 352 140 385 120 402 102 C 418 85 420 70 412 55 C 418 68 415 82 402 98 C 388 115 365 132 345 150 C 340 154 336 157 335 160 Z"
+      fill="url(#favSteamGrad)"
+    />
+
+    <!-- 2. The Open Book Foundation -->
+    <path
+      d="M 98 296 C 145 285 200 286 250 310 C 300 286 355 285 402 296 C 372 312 315 322 250 322 C 185 322 128 312 98 296 Z"
+      fill="url(#favBookBaseGrad)"
+    />
+
+    <!-- Book Pages: Left Layered Sheets -->
+    <path
+      d="M 246 295 C 190 270 142 270 108 276 C 112 260 148 245 202 248 C 220 249 238 255 246 260 Z"
+      fill="#FFFFFF"
+    />
+    <path
+      d="M 246 270 C 198 245 155 242 122 248 C 128 232 165 218 215 220 C 230 221 240 225 246 228 Z"
+      fill="#FFFFFF"
+    />
+    <path
+      d="M 246 242 C 200 216 160 214 135 220 C 145 204 180 190 230 192 C 238 193 243 194 246 195 Z"
+      fill="#FFFFFF"
+    />
+
+    <!-- Book Pages: Right Layered Sheets -->
+    <path
+      d="M 254 295 C 310 270 358 270 392 276 C 388 260 352 245 298 248 C 280 249 262 255 254 260 Z"
+      fill="#FFFFFF"
+    />
+    <path
+      d="M 254 270 C 302 245 345 242 378 248 C 372 232 335 218 285 220 C 270 221 260 225 254 228 Z"
+      fill="#FFFFFF"
+    />
+    <path
+      d="M 254 242 C 300 216 340 214 365 220 C 355 204 320 190 270 192 C 262 193 257 194 254 195 Z"
+      fill="#FFFFFF"
+    />
+
+    <!-- 3. The Stylized Center 'f' Character -->
+    <path
+      d="M 230 300 L 230 178 L 186 178 L 186 150 L 230 150 L 230 128 C 230 92 255 76 295 76 C 308 76 324 80 334 85 L 324 115 C 316 112 308 110 300 110 C 282 110 272 118 272 136 L 272 150 L 320 150 L 314 178 L 272 178 L 272 300 Z"
+      fill="#FFFFFF"
+    />
+  </g>
+</svg>

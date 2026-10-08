@@ -1,0 +1,8 @@
+{
+  "name": "FableSTEM",
+  "description": "An interactive platform blending storytelling with hands-on STEM learning for curious young minds.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
